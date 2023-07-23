@@ -131,6 +131,9 @@ $(document).ready(function () {
         $.ajax({
             url: "/api/products/id=" + productId,
             method: "POST",
+            headers: {
+                Authorization: "Bearer " + TOKEN,
+            },
             success: function (response) {
                 console.log(response);
                 populateModalForm(response);
