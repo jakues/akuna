@@ -178,7 +178,7 @@ $(document).ready(function () {
         var unit = $("#unit").val();
         var harga_product = $("#harga").val();
 
-        if (isAdd()) {
+        if (!id) {
             // tambah produk
             var id_product = $("#id").val();
             var url = "/api/products";
@@ -235,7 +235,7 @@ $(document).ready(function () {
 
     $(".btn-submit").click(function (e) {
         e.preventDefault();
-        var productId = isAdd() ? "" : $("#id").val();
+        var productId = isAdd() ? $("#id").val() : "";
 
         saveChanges(productId);
     });
