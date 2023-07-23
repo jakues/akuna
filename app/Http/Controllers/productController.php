@@ -20,6 +20,11 @@ class productController extends Controller
 
     public function apiProducts(Request $request)
     {
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
         $products = product::all();
         return DataTables::of($products)
             ->addColumn('actions', function ($product) {
@@ -44,9 +49,9 @@ class productController extends Controller
         $validatedData = $request->validate([
             'category_product' => 'required|string|max:100',
             'name_product' => 'required|string|max:255',
-            'netto_product' => 'numeric|max:10',
-            'unit' => 'string|max:5',
-            'harga_product' => 'required|numeric',
+            'netto_product' => 'numeric|max:10000',
+            'unit' => 'string|max:10',
+            'harga_product' => 'required|numeric|max:999999999',
         ]);
 
         $products = product::create([

@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\akunaController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\productController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'index'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/', [UserController::class, 'index']);
 });
 
-Route::get('/manage', function() {
-    return view('manage.index');
-});
 
-Route::get('/manage/products', function() {
-    return view('manage.product');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/manage', [AdminController::class, 'manage'])->middleware('userAccess:admin');
+    Route::get('/manage/products', [AdminController::class, 'product'])->middleware('userAccess:admin');
+    //Route::get('home', [AdminController::class, 'index']);
+    Route::get('home', function () {
+        return redirect('/');
+    });
 });
