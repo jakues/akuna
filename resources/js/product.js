@@ -1,3 +1,5 @@
+const TOKEN = "";
+
 new DataTable("#product-table", {
     responsive: true,
     language: {
@@ -7,7 +9,14 @@ new DataTable("#product-table", {
     },
     processing: true,
     serverside: true,
-    ajax: "/api/products",
+    ajax: {
+        url: "/api/products",
+        type: "GET",
+        beforeSend: function (request) {
+            request.setRequestHeader("Authorization", "Bearer " + TOKEN);
+        },
+        dataSrc: "data",
+    },
     columns: [
         {
             data: "id_product",
@@ -79,6 +88,9 @@ $(document).ready(function () {
             $.ajax({
                 url: "/api/products/" + productId,
                 method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + TOKEN,
+                },
                 success: function (response) {
                     console.log(response);
                     // show green alert
@@ -186,6 +198,9 @@ $(document).ready(function () {
         $.ajax({
             url: url,
             method: method,
+            headers: {
+                Authorization: "Bearer " + TOKEN,
+            },
             data: {
                 id_product: id_product,
                 category_product: category_product,
