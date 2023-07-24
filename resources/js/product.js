@@ -147,6 +147,7 @@ $(document).ready(function () {
     // Function to populate the modal form with product data
     function populateModalForm(productData) {
         // Set the form fields based on the productData
+        $("#id").val(productData.id_product);
         $("#category").val(productData.category_product);
         $("#product").val(productData.name_product);
         $("#netto").val(productData.netto_product);
@@ -156,16 +157,13 @@ $(document).ready(function () {
 
     // Function to clear the form fields manually
     function clearFormFields() {
+        $("#id").val("");
         $("#category").val("");
         $("#custom-category").val("");
         $("#product").val("");
         $("#netto").val("");
         $("#unit").val("");
         $("#harga").val("");
-    }
-
-    function isAdd() {
-        return $("#id").val() === "";
     }
 
     function saveChanges(id) {
@@ -183,14 +181,13 @@ $(document).ready(function () {
 
         if (!id) {
             // tambah produk
-            var id_product = $("#id").val();
+            var id_product = "";
             var url = "/api/products";
             var method = "POST";
             var greenMsg = "Berhasil menambah produk.";
             var redMsg = "Gagal menambah produk.";
         } else {
             // udpdate produk
-            $("#id").val(id);
             var id_product = $("#id").val();
             var url = "/api/products/" + id;
             var method = "PUT";
@@ -236,9 +233,13 @@ $(document).ready(function () {
         });
     }
 
+    function isAdd() {
+        return $("#id").val() === "";
+    }
+
     $(".btn-submit").click(function (e) {
         e.preventDefault();
-        var productId = isAdd() ? $("#id").val() : "";
+        var productId = isAdd() ? "" : $("#id").val();
 
         saveChanges(productId);
     });

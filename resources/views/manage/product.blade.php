@@ -61,7 +61,7 @@
                                     specify below)</option>
                             </select>
                             <!-- Other Category -->
-                            <div id="custom-category" class="" style="display: none;">
+                            <div id="custom" class="" style="display: none;">
                                 <label class="label mx-3">
                                     <span class="label-text">Enter Category</span>
                                     <span class="label-text-alt text-error">*</span>
