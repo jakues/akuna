@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\product;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class productController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class productController extends Controller
     public function index(Request $request)
     {
         return view('products.index');
-        // $data = product::orderBy('id_product', 'asc');
+        // $data = Product::orderBy('id_product', 'asc');
         // return DataTables::of($data)->make(true);
     }
 
@@ -25,7 +25,7 @@ class productController extends Controller
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        $products = product::all();
+        $products = Product::all();
         return DataTables::of($products)
             ->addColumn('actions', function ($product) {
                 return view('etc.button')->with('data', $product);
@@ -47,14 +47,14 @@ class productController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'category_product' => 'required|string|max:100',
+            'category_product' => 'string|max:100',
             'name_product' => 'required|string|max:255',
             'netto_product' => 'numeric|max:10000',
-            'unit' => 'string|max:10',
+            'unit' => 'string|max:5',
             'harga_product' => 'required|numeric|max:999999999',
         ]);
 
-        $products = product::create([
+        $products = Product::create([
             'category_product' => $validatedData['category_product'],
             'name_product' => $validatedData['name_product'],
             'netto_product' => $validatedData['netto_product'],
@@ -70,7 +70,7 @@ class productController extends Controller
      */
     public function show(string $id)
     {
-        $products = product::where('id_product', $id)->first();
+        $products = Product::where('id_product', $id)->first();
         return response()->json($products);
     }
 
@@ -88,7 +88,7 @@ class productController extends Controller
     public function update(Request $request, string $id)
     {
         // Find the product by ID
-        $product = product::where('id_product', $id)->first();
+        $product = Product::where('id_product', $id)->first();
 
         // If the product is not found, return a 404 response
         if (!$product) {
@@ -97,11 +97,11 @@ class productController extends Controller
 
         // Validate the incoming data from the client
         $validatedData = $request->validate([
-            'category_product' => 'required|string|max:100',
+            'category_product' => 'string|max:100',
             'name_product' => 'required|string|max:255',
-            'netto_product' => 'numeric|max:10',
+            'netto_product' => 'numeric|max:10000',
             'unit' => 'string|max:5',
-            'harga_product' => 'required|numeric',
+            'harga_product' => 'required|numeric|max:999999999',
         ]);
 
         // Update the product using the validated data
@@ -113,7 +113,7 @@ class productController extends Controller
             'harga_product' => $validatedData['harga_product'],
         ]);
 
-        product::where('id_product', $id)->update($product);
+        //Product::where('id_product', $id)->update($request, $product);
         // Return the updated product as a JSON response
         return response()->json($product, 200);
     }
@@ -124,7 +124,7 @@ class productController extends Controller
     public function destroy(string $id)
     {
         // Find the product by ID
-        $product = product::where('id_product', $id)->first();
+        $product = Product::where('id_product', $id)->first();
 
         // If the product is not found, return a 404 response
         if (!$product) {
