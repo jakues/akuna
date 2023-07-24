@@ -1,6 +1,6 @@
 <script>
     // function to show other category
-    var categoryEle = document.getElementById('custom-category');
+    var categoryEle = document.getElementById('custom');
 
     function handleCategory(value) {
         if (value === 'custom') {
