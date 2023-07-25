@@ -34,6 +34,14 @@
                                 <li>
                                     <a href="manage"
                                         class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                                        <i
+                                            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 fa-solid fa-house"></i>
+                                        <span class="ml-3">Home</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/dashboard"
+                                        class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                                         <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"
                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                             viewBox="0 0 22 21">
@@ -46,7 +54,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="manage/products"
+                                    <a href="/manage/products"
                                         class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"
                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -70,7 +78,8 @@
                             <li>
                                 <a href="#"
                                     class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-                                    <i class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 fa-solid fa-bag-shopping"></i>
+                                    <i
+                                        class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 fa-solid fa-bag-shopping"></i>
                                     <span class="flex-1 ml-3 whitespace-nowrap">Products</span>
                                 </a>
                             </li>
