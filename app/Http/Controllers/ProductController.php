@@ -13,12 +13,20 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        return view('products.index');
-        // $data = Product::orderBy('id_product', 'asc');
-        // return DataTables::of($data)->make(true);
+        // Get the user's search term from the 'q' query parameter
+        $searchTerm = $request->query('q');
+
+        // Perform the server-side filtering based on the search term
+        $products = Product::where('name_product', 'like', '%' . $searchTerm . '%')
+            ->orWhere('category_product', 'like', '%' . $searchTerm . '%')
+            ->orWhere('unit', 'like', '%' . $searchTerm . '%')
+            ->get();
+
+        // Return the filtered products as JSON response
+        return response()->json($products);
     }
 
-    public function apiProducts(Request $request)
+    public function api(Request $request)
     {
         $user = auth()->user();
         if (!$user) {
@@ -28,7 +36,7 @@ class ProductController extends Controller
         $products = Product::all();
         return DataTables::of($products)
             ->addColumn('actions', function ($product) {
-                return view('etc.button')->with('data', $product);
+                return view('etc.product.button')->with('data', $product);
             })
             ->toJson();
     }

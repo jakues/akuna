@@ -25,7 +25,8 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
-    Route::get('/manage', [AdminController::class, 'manage'])->middleware('userAccess:admin');
+    Route::get('/manage', [AdminController::class, 'index'])->middleware('userAccess:admin');
+    Route::get('/manage/dashboard', [AdminController::class, 'dashboard'])->middleware('userAccess:admin');
     Route::get('/manage/products', [AdminController::class, 'product'])->middleware('userAccess:admin');
     //Route::get('home', [AdminController::class, 'index']);
     Route::get('home', function () {

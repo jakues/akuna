@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    function manage()
+    function index()
     {
         return view('manage.index');
+    }
+
+    function dashboard()
+    {
+        return view('manage.dashboard');
     }
 
     function product()
