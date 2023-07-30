@@ -135,7 +135,7 @@
             </form>
         </dialog>
         <!-- modal end -->
-        <a href='#' class="btn btn-neutral text-slate-50 mx-5"><i
+        <a href='/manage/products/export' class="btn btn-neutral text-slate-50 mx-5"><i
                 class="fa-solid fa-file-export"></i>Export</a>
     </div>
 

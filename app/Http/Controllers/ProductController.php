@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductController extends Controller
 {
@@ -39,6 +41,51 @@ class ProductController extends Controller
                 return view('etc.product.button')->with('data', $product);
             })
             ->toJson();
+    }
+
+    public function export()
+    {
+        $fileName = 'product_' . date("Ymd-His") . '.csv';
+        $products = Product::all();
+
+        // Set the appropriate headers for the CSV file
+        $headers = array(
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        );
+
+        $tableHeaders = [
+            'id_product',
+            'category_product',
+            'name_product',
+            'netto_product',
+            'unit',
+            'harga_product',
+            'tanggal_input',
+            'updated_at',
+            'created_at',
+        ];
+
+        // Create a StreamedResponse to efficiently handle large data sets
+        return new StreamedResponse(function () use ($tableHeaders, $products) {
+            $file = fopen('php://output', 'w');
+
+            // Write the header row to the CSV file
+            fputcsv($file, $tableHeaders);
+
+            // Write each row of data to the CSV file
+            foreach ($products as $product) {
+                fputcsv($file, $product->getAttributes());
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
+
+    public function count()
+    {
+        $totalProducts = DB::table('product')->count();
+        return response()->json(['total_products' => $totalProducts]);
     }
 
     /**

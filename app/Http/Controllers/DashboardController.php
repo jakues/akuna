@@ -2,145 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dashboard;
-use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Artisan;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    private function scrapInsta()
     {
-        //
+        $client = new Client();
+
+        $response = $client->request('GET', 'https://instagram-scraper-2022.p.rapidapi.com/ig/web_profile_info/?user=akunaindonesia', [
+            'headers' => [
+                'X-RapidAPI-Host' => 'instagram-scraper-2022.p.rapidapi.com',
+                'X-RapidAPI-Key' => 'd5d4e9bb7cmshfb961a1e2c72fd1p13586fjsn984a527fb6cb',
+            ],
+        ]);
+
+        return $response->getBody();
     }
 
-    public function api(Request $request)
+    // Function to provide followers count
+    public function getFollowers()
     {
-        $user = auth()->user();
-        if (!$user) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+        // Define the path to the followers.json file
+        $filePath = storage_path('app/followers.json');
+
+        // Check if the followers.json file exists
+        if (file_exists($filePath)) {
+            // Read the content of the file
+            $jsonData = file_get_contents($filePath);
+
+            // Decode the JSON data into an array of associative arrays
+            $data = json_decode($jsonData, true);
+
+            // Check if the JSON data was successfully decoded
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                // Handle the case when JSON decoding fails
+                return response()->json(['error' => 'Invalid JSON data in followers.json'], 500);
+            }
+
+            // Get today's date in the 'Y-m-d' format
+            $currentDate = now()->format('Y-m-d');
+
+            // Search for today's entry in the data array
+            $edgeFollowedByCount = null;
+            foreach ($data as $entry) {
+                if ($entry['date'] === $currentDate) {
+                    $edgeFollowedByCount = $entry['followers'];
+                    break;
+                }
+            }
+
+            // If today's entry is not found in the data, call scrapInsta() to get the count
+            if ($edgeFollowedByCount === null) {
+                $jsonData = $this->scrapInsta(); // Make sure scrapInsta() is defined and returning JSON data as a string.
+
+                // Extract the "edge_followed_by" value using regular expressions
+                $pattern = '/"edge_followed_by":\s*{"count":(\d+)}/'; // Regular expression pattern
+                $matches = [];
+
+                if (preg_match($pattern, $jsonData, $matches)) {
+                    $edgeFollowedByCount = $matches[1];
+
+                    // Add today's entry to the data array
+                    $data[] = [
+                        'date' => $currentDate,
+                        'followers' => $edgeFollowedByCount,
+                    ];
+
+                    // Write the updated data array back to the followers.json file
+                    file_put_contents($filePath, json_encode($data));
+                } else {
+                    // Handle the case when the pattern is not found in the JSON data
+                    return response()->json(['error' => 'Pattern not found in JSON data'], 500);
+                }
+            }
+
+            // Now you have the "edge_followed_by" count either from the file or by calling scrapInsta()
+            // You can use it as needed, for example, return it as a response
+            return response()->json(['ig_followers' => $edgeFollowedByCount]);
+        } else {
+            // Handle the case when followers.json file is not found
+            return response()->json(['error' => 'File not found'], 500);
+        }
+    }
+
+    // Function to calculate load avg
+    private function getSystemLoad()
+    {
+        // Get the number of CPU cores
+        $numCores = (int) shell_exec('nproc');
+
+        // Get the system load averages
+        $loadAverage = sys_getloadavg();
+
+        // Calculate load averages in percentage
+         return [
+            'load_average_1min' => ($loadAverage[0] / $numCores) * 100,
+            'load_average_5min' => ($loadAverage[1] / $numCores) * 100,
+            'load_average_15min' => ($loadAverage[2] / $numCores) * 100,
+        ];
+    }
+
+    // Function to fetch db health
+    private function getDbHealth()
+    {
+        try {
+            DB::connection()->getPdo();
+            $status = 'healthy';
+            $message = 'Database connection is healthy.';
+        } catch (\Exception $e) {
+            $status = 'unhealthy';
+            $message = 'Database connection failed.';
         }
 
-        $data = Dashboard::all();
-        return DataTables::of($data)
-            ->addColumn('actions', function ($data) {
-                return view('etc.dashboard.button')->with('data', $data);
-            })
-            ->toJson();
+        return [
+            'status' => $status,
+            'message' => $message,
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getDashboardData()
     {
-        //
-    }
+        $totalTx = DB::table('pembelian')->count();
+        $totalProduct = DB::table('product')->count();
+        $totalMember = DB::table('users')->count();
+        $loadAvg = $this->getSystemLoad();
+        $dbHealth = $this->getDbHealth();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'tanggal_pembelian' => 'required|string|max:15',
-            'customer' => 'required|string|max:50',
-            'alamat' => 'required|string|max:255',
-            'telp' => 'required|string|max:15',
-            'nama_barang' => 'required|string|max:255',
-            'qty_pembelian' => 'required|numeric|max:10000',
-            'harga' => 'required|numeric|max:9999999',
-            'total_harga' => 'required|numeric|max:999999999',
-        ]);
+        $dashboardData = [
+            'total_products' => $totalProduct,
+            'total_transaction' => $totalTx,
+            'total_member' => $totalMember - 1,
+            'load_avg_1min' => $loadAvg['load_average_1min'],
+            'load_avg_5min' => $loadAvg['load_average_5min'],
+            'load_avg_15min' => $loadAvg['load_average_15min'],
+            'db_health_status' => $dbHealth['status'],
+            'db_health_message' => $dbHealth['message'],
+        ];
 
-        $tx = Dashboard::create([
-            'tanggal_pembelian' => $validatedData['tanggal_pembelian'],
-            'customer' => $validatedData['customer'],
-            'alamat' => $validatedData['alamat'],
-            'telp' => $validatedData['telp'],
-            'nama_barang' => $validatedData['nama_barang'],
-            'qty_pembelian' => $validatedData['qty_pembelian'],
-            'harga' => $validatedData['harga'],
-            'total_harga' => $validatedData['total_harga'],
-        ]);
-
-        return response()->json($tx, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $data = Dashboard::where('id', $id)->first();
-        return response()->json($data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Find by id
-        $data = Dashboard::where('id', $id)->first();
-
-        if (!$data) {
-            return response()->json(['message' => 'Data not found'], 404);
-        }
-
-        // Validate incoming data
-        $validatedData = $request->validate([
-            'tanggal_pembelian' => 'required|string|max:15',
-            'customer' => 'required|string|max:50',
-            'alamat' => 'required|string|max:255',
-            'telp' => 'required|string|max:15',
-            'nama_barang' => 'required|string|max:255',
-            'qty_pembelian' => 'required|numeric|max:10000',
-            'harga' => 'required|numeric|max:9999999',
-            'total_harga' => 'required|numeric|max:999999999',
-        ]);
-
-        // Update using validated data
-        $data->update([
-            'tanggal_pembelian' => $validatedData['tanggal_pembelian'],
-            'customer' => $validatedData['customer'],
-            'alamat' => $validatedData['alamat'],
-            'telp' => $validatedData['telp'],
-            'nama_barang' => $validatedData['nama_barang'],
-            'qty_pembelian' => $validatedData['qty_pembelian'],
-            'harga' => $validatedData['harga'],
-            'total_harga' => $validatedData['total_harga'],
-        ]);
-
-        return response()->json($data, 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        // Find by id
-        $data = Dashboard::where('id', $id)->first();
-
-        if (!$data) {
-            return response()->json(['message' => 'Data not found', 404]);
-        }
-
-        // Delete it
-        $data->delete();
-
-        // Return a success response
-        return response()->json(['message' => 'Data deleted successfully', 200]);
+        return Response::json($dashboardData);
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -23,23 +24,33 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    ///////////////
+    // statistic //
+    //////////////
+
+    // Count product and tx
+    Route::get('/statistic', [DashboardController::class, 'getDashboardData']);
+
+    // Retrive ig followers
+    Route::get('/statistic/ig', [DashboardController::class, 'getFollowers']);
+
     ////////////////////
     // data pembelian //
     ////////////////////
     // Retrive data pembelian
-    Route::get('/tx', [DashboardController::class, 'api']);
+    Route::get('/tx', [TransactionController::class, 'api']);
 
     // Show tx by ID
-    Route::post('/tx/id={id}', [DashboardController::class, 'show']);
+    Route::post('/tx/id={id}', [TransactionController::class, 'show']);
 
     // Store new tx
-    Route::post('/tx', [DashboardController::class, 'store']);
+    Route::post('/tx', [TransactionController::class, 'store']);
 
     // Update tx data
-    Route::put('/tx/{id}', [DashboardController::class, 'update']);
+    Route::put('/tx/{id}', [TransactionController::class, 'update']);
 
     // Delete tx data
-    Route::delete('/tx/{id}', [DashboardController::class, 'destroy']);
+    Route::delete('/tx/{id}', [TransactionController::class, 'destroy']);
 
     /////////////
     // product //
