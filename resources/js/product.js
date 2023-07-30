@@ -1,4 +1,4 @@
-const TOKEN = "";
+import TOKEN from "./API_KEY";
 
 new DataTable("#product-table", {
     responsive: true,
@@ -80,10 +80,11 @@ $(document).ready(function () {
         product_modal.showModal();
     });
 
+    // Delete button
     $("#product-table").on("click", ".delete-btn", function () {
         var productId = $(this).data("id");
-        var greenMsg = "Berhasil hapus produk";
-        var redMsg = "Gagal hapus produk";
+        var greenMsg = "Berhasil hapus produk.";
+        var redMsg = "Gagal hapus produk.";
         if (confirm("Apakah ingin menghapus data #" + productId + " ?")) {
             $.ajax({
                 url: "/api/products/" + productId,
@@ -187,7 +188,7 @@ $(document).ready(function () {
             var greenMsg = "Berhasil menambah produk.";
             var redMsg = "Gagal menambah produk.";
         } else {
-            // udpdate produk
+            // update produk
             var id_product = $("#id").val();
             var url = "/api/products/" + id;
             var method = "PUT";

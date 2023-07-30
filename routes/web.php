@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,8 +27,11 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);
-    Route::get('/manage', [AdminController::class, 'manage'])->middleware('userAccess:admin');
+    Route::get('/manage', [AdminController::class, 'index'])->middleware('userAccess:admin');
+    Route::get('/manage/tx', [AdminController::class, 'transaction'])->middleware('userAccess:admin');
+    Route::get('/manage/tx/export', [TransactionController::class, 'export'])->middleware('userAccess:admin');
     Route::get('/manage/products', [AdminController::class, 'product'])->middleware('userAccess:admin');
+    Route::get('/manage/products/export', [ProductController::class, 'export'])->middleware('userAccess:admin');
     //Route::get('home', [AdminController::class, 'index']);
     Route::get('home', function () {
         return redirect('/');

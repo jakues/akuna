@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class AdminController extends Controller
 {
-    function manage()
+    function index()
     {
         return view('manage.index');
+    }
+
+    function transaction()
+    {
+        return view('manage.transaction');
     }
 
     function product()

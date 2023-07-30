@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/css/dataTables.tailwindcss.min.css', 'resources/js/app.js'])
+    <title>akuna - manage</title>
 </head>
 
 <body class="bg-slate-50" data-theme="pastel">
@@ -134,7 +135,7 @@
             </form>
         </dialog>
         <!-- modal end -->
-        <a href='#' class="btn btn-neutral text-slate-50 mx-5"><i
+        <a href='/manage/products/export' class="btn btn-neutral text-slate-50 mx-5"><i
                 class="fa-solid fa-file-export"></i>Export</a>
     </div>
 
