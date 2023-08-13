@@ -13,6 +13,7 @@ class Transaction extends Model
     protected $fillable = [
         'tanggal_pembelian',
         'customer',
+        'kode',
         'alamat',
         'telp',
         'nama_barang',
