@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionExport;
+use App\Imports\TransactionImport;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionController extends Controller
 {
@@ -32,45 +35,34 @@ class TransactionController extends Controller
             ->toJson();
     }
 
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'CsvFile' => 'required|mimes:xlsx',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.transaction')->with('error', 'Please upload a valid Excel file.');
+        }
+
+        $file = $request->file('CsvFile');
+
+        if ($file) {
+            try {
+                Excel::import(new TransactionImport, $file);
+
+                return response()->json(['message' => 'Excel file imported successfully'], 201);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error importing Excel file'], 500);
+            }
+        }
+
+        return response()->json(['error' => 'No file provided.'], 500);
+    }
+
     public function export()
     {
-        $fileName = 'tx_' . date("Ymd-His") . '.csv';
-        $transactions = Transaction::all();
-
-        // Set the appropriate headers for the CSV file
-        $headers = array(
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        );
-
-        $tableHeaders = [
-            'id',
-            'tanggal_pembelian',
-            'customer',
-            'alamat',
-            'telp',
-            'nama_barang',
-            'qty_pembelian',
-            'harga',
-            'total_harga',
-            'updated_at',
-            'created_at',
-        ];
-
-        // Create a StreamedResponse to efficiently handle large data sets
-        return new StreamedResponse(function () use ($tableHeaders, $transactions) {
-            $file = fopen('php://output', 'w');
-
-            // Write the header row to the CSV file
-            fputcsv($file, $tableHeaders);
-
-            // Write each row of data to the CSV file
-            foreach ($transactions as $transaction) {
-                fputcsv($file, $transaction->getAttributes());
-            }
-
-            fclose($file);
-        }, 200, $headers);
+        return Excel::download(new TransactionExport, (new TransactionExport)->fileName());
     }
 
     /**
@@ -89,9 +81,10 @@ class TransactionController extends Controller
         $validatedData = $request->validate([
             'tanggal_pembelian' => 'required|string|max:15',
             'customer' => 'required|string|max:50',
+            'kode' => 'required|string|max:50',
             'alamat' => 'required|string|max:255',
             'telp' => 'required|string|max:15',
-            'nama_barang' => 'required|string|max:255',
+            'nama_barang' => 'required|string',
             'qty_pembelian' => 'required|numeric|max:10000',
             'harga' => 'required|numeric|max:9999999',
             'total_harga' => 'required|numeric|max:999999999',
@@ -100,6 +93,7 @@ class TransactionController extends Controller
         $tx = Transaction::create([
             'tanggal_pembelian' => $validatedData['tanggal_pembelian'],
             'customer' => $validatedData['customer'],
+            'kode' => $validatedData['kode'],
             'alamat' => $validatedData['alamat'],
             'telp' => $validatedData['telp'],
             'nama_barang' => $validatedData['nama_barang'],
@@ -144,6 +138,7 @@ class TransactionController extends Controller
         $validatedData = $request->validate([
             'tanggal_pembelian' => 'required|string|max:15',
             'customer' => 'required|string|max:50',
+            'kode' => 'required|string|max:50',
             'alamat' => 'required|string|max:255',
             'telp' => 'required|string|max:15',
             'nama_barang' => 'required|string|max:255',
@@ -156,6 +151,7 @@ class TransactionController extends Controller
         $data->update([
             'tanggal_pembelian' => $validatedData['tanggal_pembelian'],
             'customer' => $validatedData['customer'],
+            'kode' => $validatedData['kode'],
             'alamat' => $validatedData['alamat'],
             'telp' => $validatedData['telp'],
             'nama_barang' => $validatedData['nama_barang'],

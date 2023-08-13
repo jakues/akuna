@@ -14,10 +14,14 @@
 @include('etc.alert')
 
 <div class="flex justify-between mt-5 mx-5">
-    <button id="add-data-btn" class="btn btn-info text-slate-50 mx-5"><i class="fa-solid fa-plus"></i>Tambah
-        Data
-    </button>
-    {{-- modal start --}}
+    <div>
+        <button id="add-data-btn" class="btn btn-info text-slate-50 mx-5"><i class="fa-solid fa-plus"></i>Tambah Data
+        </button>
+        <button id="import-btn" class="btn btn-success text-slate-50 mx-5" onclick="import_modal.showModal()"><i
+                class="fa-solid fa-file-arrow-up"></i></i>Import
+        </button>
+    </div>
+    {{-- modal input start --}}
     <dialog id="data_modal" class="modal">
         <form method="dialog" class="modal-box max-w-5xl h-4/5">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -38,7 +42,7 @@
                         </div>
                         {{-- date end --}}
                         {{-- customer start --}}
-                        <div class="form-control mb-3 w-3/4">
+                        <div class="form-control mb-3 w-1/2">
                             <label class="label mx-3">
                                 <span class="label-text">Nama Customer</span>
                                 <span class="label-text-alt text-error">*</span>
@@ -48,6 +52,17 @@
                                    value="">
                         </div>
                         {{-- customer end --}}
+                        {{-- kode start --}}
+                        <div class="form-control mb-3 w-3/12">
+                            <label class="label mx-3">
+                                <span class="label-text">Kode</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <input type="text" placeholder="e.g. Shopee"
+                                   class="input input-bordered input-primary w-full" name="kode" id="kode"
+                                   value="">
+                        </div>
+                        {{-- kode end --}}
                     </div>
                     {{-- alamat start --}}
                     <div class="form-control w-full mb-3">
@@ -133,8 +148,35 @@
             <button>close</button>
         </form>
     </dialog>
-    {{-- modal end --}}
-    <a href='/manage/tx/export' class="btn btn-neutral text-slate-50 mx-5"><i
+    {{-- end modal input --}}
+    {{-- modal import start --}}
+    <dialog id="import_modal" class="modal">
+        <form method="dialog" class="modal-box max-w-3xl">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <h3 id="" class="font-bold text-xl mb-5">Import Data Transaction</h3>
+            <div class="mx-5">
+                <form id="importForm" method="POST" enctype="multipart/form-data">
+                    <div class="form-control w-full">
+                        <label class="label mx-5">
+                            <span class="label-text">Pick a file</span>
+                            <span class="label-text-alt">Format must <span class="text-error">.xlsx</span></span>
+                        </label>
+                        <input type="file"
+                               class="file-input file-input-accent file-input-bordered file-input-md w-full" id="CsvFile" name="CsvFile"/>
+                    </div>
+                    <div class="flex justify-end mt-5">
+                        <button type="submit" class="btn btn-accent import-submit">Submit</button>
+                        <button type="reset" class="btn btn-active btn-ghost ml-5">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </form>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    {{-- end modal import --}}
+    <a href="{{ route('admin.transaction.export') }}" class="btn btn-neutral text-slate-50 mx-5"><i
             class="fa-solid fa-file-export"></i>Export</a>
 </div>
 
@@ -146,6 +188,7 @@
             <th>#</th>
             <th>Tanggal</th>
             <th>Customer</th>
+            <th>Kode</th>
             <th>Alamat</th>
             <th>Telepon</th>
             <th>Produk</th>

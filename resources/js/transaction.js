@@ -32,6 +32,10 @@ new DataTable("#data-table", {
             name: "Customer",
         },
         {
+            data: "kode",
+            name: "Kode",
+        },
+        {
             data: "alamat",
             name: "Alamat",
         },
@@ -68,11 +72,46 @@ $(document).ready(function () {
 
     $.ajaxSetup({
         headers: {
-            "X-CSSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
 
-    // Open modal for add bttuon
+    // import button
+    $('.import-submit').click(function (e) {
+        e.preventDefault();
+        var fileInput = $('#CsvFile')[0];
+        var formData = new FormData($('#importForm')[0]);
+        formData.append('CsvFile', fileInput.files[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: '/manage/tx/import',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                // Show a success alert using your logic
+                $("#greenMsg").text('Berhasil import data.');
+                showAlert($("#greenAlert"), loadingBarGreen);
+                setTimeout(function() {
+                    hideAlert($("#greenAlert"), loadingBarGreen);
+                }, 4000);
+                $("#data-table").DataTable().ajax.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                // Show an error alert using your logic
+                $("#redMsg").text('Gagal import data.');
+                showAlert($("#redAlert"), loadingBarRed);
+                setTimeout(function() {
+                    hideAlert($("#redAlert"), loadingBarRed);
+                }, 4000);
+            }
+        });
+    });
+
+    // Open modal for add button
     $("#add-data-btn").on("click", function () {
         clearFormFields();
         data_modal.showModal();
@@ -109,7 +148,7 @@ $(document).ready(function () {
                     setTimeout(() => {
                         hideAlert($("#greenAlert"), loadingBarGreen);
                     }, 4000);
-                    $("#product-table").DataTable().ajax.reload();
+                    $("#data-table").DataTable().ajax.reload();
                 },
                 error: function (err) {
                     console.error("Error: ", err);

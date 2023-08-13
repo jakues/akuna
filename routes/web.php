@@ -25,10 +25,11 @@ Route::middleware(['guest'])->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(callback: function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/manage', [AdminController::class, 'index'])->middleware('userAccess:admin')->name('admin.index');
     Route::get('/manage/tx', [AdminController::class, 'transaction'])->middleware('userAccess:admin')->name('admin.transaction');
+    Route::post('/manage/tx/import', [TransactionController::class, 'import'])->middleware('userAccess:admin')->name('admin.transaction.import');
     Route::get('/manage/tx/export', [TransactionController::class, 'export'])->middleware('userAccess:admin')->name('admin.transaction.export');
     Route::get('/manage/products', [AdminController::class, 'product'])->middleware('userAccess:admin')->name('admin.product');
     Route::get('/manage/products/export', [ProductController::class, 'export'])->middleware('userAccess:admin')->name('admin.product.export');
