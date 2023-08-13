@@ -46,14 +46,14 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/manage/tx"
+                                    <a href="{{ route('admin.transaction') }}"
                                        class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                                         <i class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 fa-solid fa-receipt"></i>
                                         <span class="flex-1 ml-3 whitespace-nowrap">Transaction</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/manage/products"
+                                    <a href="{{ route('admin.product') }}"
                                         class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
                                         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900"
                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -132,11 +132,11 @@
                         </li>
                         <li>
                             @guest
-                                <a href="login"
+                                <a href="{{ route('login') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Sign in</a>
                             @else
-                                <a href="logout"
+                                <a href="{{ route('auth.logout') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                     role="menuitem">Sign out</a>
                             @endguest
