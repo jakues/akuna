@@ -3,7 +3,7 @@ const rootUrl = "/";
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
-            "X-CSSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
 
@@ -29,11 +29,9 @@ $(document).ready(function () {
                 Authorization: "Bearer " + TOKEN,
             },
             success: function (response) {
-                var loadAvg = (response.load_avg_1min + response.load_avg_5min + response.load_avg_15min) / 3;
                 $('#total_tx').text(Number(response.total_transaction).toLocaleString());
                 $('#total_product').text(Number(response.total_products).toLocaleString());
                 $('#total_member').text(Number(response.total_member).toLocaleString());
-                $('#load_avg').text(loadAvg.toFixed(2) + " %");
                 if (response.db_health_status === 'healthy') {
                     var textColor = 'text-green-400';
                 } else {
@@ -46,7 +44,6 @@ $(document).ready(function () {
                 $('#total_tx').text('N/A');
                 $('#total_product').text('N/A');
                 $('#total_member').text('N/A');
-                $('#load_avg').text('N/A %');
                 $('.db_health').text('N/A');
             }
         });

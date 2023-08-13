@@ -3,5 +3,4 @@ import './jquery.dataTables.min.js';
 import './datatables.min.js';
 import './dataTables.tailwindcss.min.js';
 import './select2.min.js';
-import './luxon.min.js';
 import 'flowbite';

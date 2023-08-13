@@ -109,35 +109,6 @@
 {{--system stats--}}
 <div class="grid grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-4 sm:px-8">
     <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-        <div class="p-4 bg-pink-400">
-            <svg class="h-12 w-12 text-white" fill="#000000" viewBox="0 0 32 32" id="icon"
-                 xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <defs>
-                        <style> .cls-1 {
-                                fill: none;
-                            } </style>
-                    </defs>
-                    <path
-                        d="M25,16H17V10H15v6H7a2.0023,2.0023,0,0,0-2,2v6H7V18h8v6h2V18h8v6h2V18A2.0023,2.0023,0,0,0,25,16Z"
-                        transform="translate(0 0)"></path>
-                    <rect x="4" y="26" width="4" height="4"></rect>
-                    <rect x="14" y="26" width="4" height="4"></rect>
-                    <rect x="24" y="26" width="4" height="4"></rect>
-                    <rect x="11" y="5" width="10" height="2"></rect>
-                    <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" class="cls-1" width="32"
-                          height="32"></rect>
-                </g>
-            </svg>
-        </div>
-        <div class="px-4 text-gray-700">
-            <h3 class="text-sm tracking-wider">System Load</h3>
-            <p id="load_avg" class="text-3xl">Loading...</p>
-        </div>
-    </div>
-    <div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
         <div class="p-4 bg-orange-400">
             <svg class="h-12 w-12 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
