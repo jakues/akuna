@@ -1,4 +1,5 @@
-import TOKEN from "./API_KEY";
+const TOKEN = import.meta.env.VITE_TOKEN;
+const rootUrl = "/";
 
 new DataTable("#product-table", {
     responsive: true,
@@ -10,7 +11,7 @@ new DataTable("#product-table", {
     processing: true,
     serverside: true,
     ajax: {
-        url: "/api/products",
+        url: rootUrl + "api/products",
         type: "GET",
         beforeSend: function (request) {
             request.setRequestHeader("Authorization", "Bearer " + TOKEN);
@@ -87,7 +88,7 @@ $(document).ready(function () {
         var redMsg = "Gagal hapus produk.";
         if (confirm("Apakah ingin menghapus data #" + productId + " ?")) {
             $.ajax({
-                url: "/api/products/" + productId,
+                url: rootUrl + "api/products/" + productId,
                 method: "DELETE",
                 headers: {
                     Authorization: "Bearer " + TOKEN,
@@ -130,7 +131,7 @@ $(document).ready(function () {
     // Function to fetch product data by ID and populate the modal form
     function fetchData(productId) {
         $.ajax({
-            url: "/api/products/id=" + productId,
+            url: rootUrl + "api/products/id=" + productId,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN,
@@ -183,14 +184,14 @@ $(document).ready(function () {
         if (!id) {
             // tambah produk
             var id_product = "";
-            var url = "/api/products";
+            var url = rootUrl + "api/products";
             var method = "POST";
             var greenMsg = "Berhasil menambah produk.";
             var redMsg = "Gagal menambah produk.";
         } else {
             // update produk
             var id_product = $("#id").val();
-            var url = "/api/products/" + id;
+            var url = rootUrl + "api/products/" + id;
             var method = "PUT";
             var greenMsg = "Berhasil update produk.";
             var redMsg = "Gagal update produk.";

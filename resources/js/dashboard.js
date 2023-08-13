@@ -1,5 +1,5 @@
-import TOKEN from "./API_KEY";
-
+const TOKEN = import.meta.env.VITE_TOKEN;
+const rootUrl = "/";
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {
@@ -8,7 +8,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: '/api/statistic/ig',
+        url: rootUrl + 'api/statistic/ig',
         method: 'GET',
         headers: {
             Authorization: "Bearer " + TOKEN,
@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     function getData() {
         $.ajax({
-            url: '/api/statistic',
+            url: rootUrl + 'api/statistic',
             method: 'GET',
             headers: {
                 Authorization: "Bearer " + TOKEN,

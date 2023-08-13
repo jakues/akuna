@@ -1,4 +1,5 @@
-import TOKEN from "./API_KEY";
+const TOKEN = import.meta.env.VITE_TOKEN;
+const rootUrl = "/";
 
 new DataTable("#data-table", {
     responsive: true,
@@ -10,7 +11,7 @@ new DataTable("#data-table", {
     processing: true,
     serverSide: true,
     ajax: {
-        url: "/api/tx",
+        url: rootUrl + "api/tx",
         type: "GET",
         beforeSend: function (request) {
             request.setRequestHeader("Authorization", "Bearer " + TOKEN);
@@ -95,10 +96,10 @@ $(document).ready(function () {
         var redMsg = "Gagal hapus data.";
         if (confirm("Apakah ingin menghapus data #" + id + " ?")) {
             $.ajax({
-                url: "/api/tx/" + id,
+                url: rootUrl + "api/tx/" + id,
                 method: "DELETE",
                 headers: {
-                    Authorization: "Bearer" + TOKEN,
+                    Authorization: "Bearer " + TOKEN,
                 },
                 success: function (response) {
                     console.log(response);
@@ -129,7 +130,7 @@ $(document).ready(function () {
         dropdownParent: $("#data_modal"),
         minimumInputLength: 4,
         ajax: {
-            url: "/api/product",
+            url: rootUrl + "/api/product",
             method: "GET",
             dataType: "json",
             headers: {
@@ -183,7 +184,7 @@ $(document).ready(function () {
     // Function to fetch data tx by id
     function fetchData(id) {
         $.ajax({
-            url: "/api/tx/id=" + id,
+            url: rootUrl + "api/tx/id=" + id,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + TOKEN,
@@ -244,7 +245,7 @@ $(document).ready(function () {
         if (!id) {
             // tambah data
             var id = "";
-            var url = "/api/tx/";
+            var url = rootUrl + "api/tx";
             var method = "POST";
             var greenMsg = "Berhasil menambah data.";
             var redMsg = "Gagal menambah data";
