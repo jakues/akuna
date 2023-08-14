@@ -29,7 +29,9 @@ class TransactionExport implements FromCollection, WithHeadings
             'nama_barang',
             'qty_pembelian',
             'harga',
-            'total_harga'
+            'total_harga',
+            'updated_at',
+            'created_at'
         ];
     }
 

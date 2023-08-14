@@ -64,6 +64,48 @@ $(document).ready(function () {
         },
     });
 
+    // Show modal and reset value on import modal
+    $('#import-btn').click(function (e) {
+        e.preventDefault();
+        import_modal.showModal();
+        $('#XlsxFile').val('');
+    });
+
+    // Import button
+    $('.import-submit').click(function (e) {
+        e.preventDefault();
+        var fileInput = $('#XlsxFile')[0];
+        var formData = new FormData($('#importForm')[0]);
+        formData.append('XlsxFile', fileInput.files[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: '/manage/products/import',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                // Show a success alert using your logic
+                $("#greenMsg").text('Berhasil import data.');
+                showAlert($("#greenAlert"), loadingBarGreen);
+                setTimeout(function() {
+                    hideAlert($("#greenAlert"), loadingBarGreen);
+                }, 4000);
+                $("#product-table").DataTable().ajax.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                // Show an error alert using your logic
+                $("#redMsg").text('Gagal import data.');
+                showAlert($("#redAlert"), loadingBarRed);
+                setTimeout(function() {
+                    hideAlert($("#redAlert"), loadingBarRed);
+                }, 4000);
+            }
+        });
+    });
+
     // Open modal for add-product-btn
     $("#add-product-btn").on("click", function () {
         clearFormFields();

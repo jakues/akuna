@@ -8,7 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel as TransactionExcel;
 
 class TransactionController extends Controller
 {
@@ -38,18 +38,18 @@ class TransactionController extends Controller
     public function import(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'CsvFile' => 'required|mimes:xlsx',
+            'XlsxFile' => 'required|mimes:xlsx',
         ]);
 
         if ($validator->fails()) {
             return redirect()->route('admin.transaction')->with('error', 'Please upload a valid Excel file.');
         }
 
-        $file = $request->file('CsvFile');
+        $file = $request->file('XlsxFile');
 
         if ($file) {
             try {
-                Excel::import(new TransactionImport, $file);
+                TransactionExcel::import(new TransactionImport, $file);
 
                 return response()->json(['message' => 'Excel file imported successfully'], 201);
             } catch (\Exception $e) {
@@ -62,7 +62,7 @@ class TransactionController extends Controller
 
     public function export()
     {
-        return Excel::download(new TransactionExport, (new TransactionExport)->fileName());
+        return TransactionExcel::download(new TransactionExport, (new TransactionExport)->fileName());
     }
 
     /**

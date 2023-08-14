@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(callback: function () {
     Route::post('/manage/tx/import', [TransactionController::class, 'import'])->middleware('userAccess:admin')->name('admin.transaction.import');
     Route::get('/manage/tx/export', [TransactionController::class, 'export'])->middleware('userAccess:admin')->name('admin.transaction.export');
     Route::get('/manage/products', [AdminController::class, 'product'])->middleware('userAccess:admin')->name('admin.product');
+    Route::post('/manage/products/import', [ProductController::class, 'import'])->middleware('userAccess:admin')->name('admin.product.import');
     Route::get('/manage/products/export', [ProductController::class, 'export'])->middleware('userAccess:admin')->name('admin.product.export');
     Route::get('home', function () {
         return redirect('/');

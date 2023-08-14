@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
+use App\Imports\ProductImport;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Maatwebsite\Excel\Facades\Excel as ProductExcel;
 
 class ProductController extends Controller
 {
@@ -43,43 +46,34 @@ class ProductController extends Controller
             ->toJson();
     }
 
+    public function import(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'XlsxFile' => 'required|mimes:xlsx',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.product')->with('error', 'Please upload a valid Excel file.');
+        }
+
+        $file = $request->file('XlsxFile');
+
+        if ($file) {
+            try {
+                ProductExcel::import(new ProductImport, $file);
+
+                return response()->json(['message' => 'Excel file imported successfully'], 201);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error importing Excel file'], 500);
+            }
+        }
+
+        return response()->json(['error' => 'No file provided.'], 500);
+    }
+
     public function export()
     {
-        $fileName = 'product_' . date("Ymd-His") . '.csv';
-        $products = Product::all();
-
-        // Set the appropriate headers for the CSV file
-        $headers = array(
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        );
-
-        $tableHeaders = [
-            'id_product',
-            'category_product',
-            'name_product',
-            'netto_product',
-            'unit',
-            'harga_product',
-            'tanggal_input',
-            'updated_at',
-            'created_at',
-        ];
-
-        // Create a StreamedResponse to efficiently handle large data sets
-        return new StreamedResponse(function () use ($tableHeaders, $products) {
-            $file = fopen('php://output', 'w');
-
-            // Write the header row to the CSV file
-            fputcsv($file, $tableHeaders);
-
-            // Write each row of data to the CSV file
-            foreach ($products as $product) {
-                fputcsv($file, $product->getAttributes());
-            }
-
-            fclose($file);
-        }, 200, $headers);
+        return ProductExcel::download(new ProductExport, (new ProductExport)->filename());
     }
 
     public function count()

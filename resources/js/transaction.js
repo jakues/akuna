@@ -76,12 +76,19 @@ $(document).ready(function () {
         },
     });
 
+    // Show modal and reset value on import modal
+    $('#import-btn').click(function (e) {
+        e.preventDefault();
+        import_modal.showModal();
+        $('#XlsxFile').val('');
+    });
+
     // import button
     $('.import-submit').click(function (e) {
         e.preventDefault();
-        var fileInput = $('#CsvFile')[0];
+        var fileInput = $('#XlsxFile')[0];
         var formData = new FormData($('#importForm')[0]);
-        formData.append('CsvFile', fileInput.files[0]);
+        formData.append('XlsxFile', fileInput.files[0]);
 
         $.ajax({
             type: 'POST',

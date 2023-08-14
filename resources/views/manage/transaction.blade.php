@@ -17,7 +17,7 @@
     <div>
         <button id="add-data-btn" class="btn btn-info text-slate-50 mx-5"><i class="fa-solid fa-plus"></i>Tambah Data
         </button>
-        <button id="import-btn" class="btn btn-success text-slate-50 mx-5" onclick="import_modal.showModal()"><i
+        <button id="import-btn" class="btn btn-success text-slate-50 mx-5"><i
                 class="fa-solid fa-file-arrow-up"></i></i>Import
         </button>
     </div>
@@ -162,7 +162,7 @@
                             <span class="label-text-alt">Format must <span class="text-error">.xlsx</span></span>
                         </label>
                         <input type="file"
-                               class="file-input file-input-accent file-input-bordered file-input-md w-full" id="CsvFile" name="CsvFile"/>
+                               class="file-input file-input-accent file-input-bordered file-input-md w-full" id="XlsxFile" name="XlsxFile"/>
                     </div>
                     <div class="flex justify-end mt-5">
                         <button type="submit" class="btn btn-accent import-submit">Submit</button>
