@@ -1,5 +1,5 @@
 const TOKEN = import.meta.env.VITE_TOKEN;
-const rootUrl = "/";
+const rootUrl = "/akuna/public/";
 $(document).ready(function () {
     $.ajaxSetup({
         headers: {

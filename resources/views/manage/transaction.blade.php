@@ -5,7 +5,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/css/dataTables.tailwindcss.min.css', 'resources/css/select2.min.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('build/assets/app-22a9a34e.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-fa74f9f9.css') }}">
     <title>manage - transaction</title>
 </head>
 
@@ -184,8 +185,9 @@
 {{-- table end --}}
 
 {{-- script --}}
-@vite('resources/js/transaction.js')
-<script src="https://kit.fontawesome.com/8c1bad6c0c.js" crossorigin="anonymous"></script>
+@include('etc.script')
+@include('etc.requirements')
+<script src="{{ asset('build/assets/transaction-ef74a1ee.js') }}"></script>
 {{-- script --}}
 </body>
 

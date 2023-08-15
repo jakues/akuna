@@ -5,14 +5,13 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/css/dataTables.tailwindcss.min.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('build/assets/app-22a9a34e.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-fa74f9f9.css') }}">
     <title>akuna - manage</title>
 </head>
 
 <body class="bg-slate-50" data-theme="pastel">
-<!-- navbar start -->
 @include('etc.navbar')
-<!-- navbar end -->
 @include('etc.alert')
 
 <div class="flex justify-between mt-5 mx-5">
@@ -196,11 +195,11 @@
 </section>
 <!-- table end -->
 
-<!-- script -->
-@vite('resources/js/product.js')
+{{-- script --}}
 @include('etc.script')
-<script src="https://kit.fontawesome.com/8c1bad6c0c.js" crossorigin="anonymous"></script>
-<!-- script -->
+@include('etc.requirements')
+<script src="{{ asset('build/assets/product-34479475.js ') }}"></script>
+{{-- script --}}
 </body>
 
 </html>
