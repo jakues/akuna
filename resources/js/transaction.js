@@ -69,6 +69,8 @@ new DataTable("#data-table", {
 $(document).ready(function () {
     const loadingBarGreen = $(".loadingBarGreen");
     const loadingBarRed = $(".loadingBarRed");
+    var selectedValue;
+    var productData = [];
 
     $.ajaxSetup({
         headers: {
@@ -96,22 +98,22 @@ $(document).ready(function () {
             data: formData,
             contentType: false,
             processData: false,
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 // Show a success alert using your logic
                 $("#greenMsg").text('Berhasil import data.');
                 showAlert($("#greenAlert"), loadingBarGreen);
-                setTimeout(function() {
+                setTimeout(function () {
                     hideAlert($("#greenAlert"), loadingBarGreen);
                 }, 4000);
                 $("#data-table").DataTable().ajax.reload();
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error(error);
                 // Show an error alert using your logic
                 $("#redMsg").text('Gagal import data.');
                 showAlert($("#redAlert"), loadingBarRed);
-                setTimeout(function() {
+                setTimeout(function () {
                     hideAlert($("#redAlert"), loadingBarRed);
                 }, 4000);
             }
@@ -170,50 +172,158 @@ $(document).ready(function () {
         }
     });
 
-    // select2 for search product
-    $(".select-category").select2({
-        placeholder: "Silahkan ketik produk lalu pilih",
-        dropdownParent: $("#data_modal"),
-        minimumInputLength: 4,
-        ajax: {
-            url: rootUrl + "/api/product",
-            method: "GET",
-            dataType: "json",
-            headers: {
-                Authorization: "Bearer " + TOKEN,
-            },
-            processResults: function (data) {
-                // Map the fetched data to Select2 format
-                return {
-                    results: data.map(function (product) {
-                        var text =
-                            product.name_product +
-                            " " +
-                            product.netto_product +
-                            product.unit +
-                            " - Rp." +
-                            product.harga_product;
-                        return {
-                            id: product.id_product,
-                            text: text,
-                        };
-                    }),
-                };
-            },
-            cache: true,
-        },
+    $('.range').on('input', function (e) {
+        e.preventDefault();
+        selectedValue = parseInt($(this).val());
+        const collapseContainer = $('#collapseContainer');
+        collapseContainer.empty();
+        var sum = 0;
+
+        if (selectedValue >= 1) {
+            for (let i = 1; i <= selectedValue; i++) {
+                const collapseHtml = `
+                        <details class="collapse-product-${i} mt-5 collapse bg-base-200 collapse-arrow border border-base-300">
+                        <summary class="collapse-title text-md font-medium">Product ${i}</summary>
+                        <div class="collapse-content">
+                            <!-- product start -->
+                            <div class="form-control w-full mb-3">
+                                <label class="label mx-3">
+                                    <span class="label-text">Pilih Produk</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <select name="category${i}" class="select-category select select-bordered select-primary">
+                                </select>
+                            </div>
+                            <!-- product end -->
+                            <!-- variant start -->
+                            <div class="flex justify-between">
+                                <div class="form-control mb-3" style="width: 48%;">
+                                    <label class="label mx-3">
+                                        <span class="label-text">Variant</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered input-primary w-full"
+                                           placeholder="jika ada" name="variant${i}" id="variant${i}" value="">
+                                </div>
+                                <div class="form-control mb-3" style="width: 48%;">
+                                    <label class="label mx-3">
+                                        <span class="label-text">Essence</span>
+                                    </label>
+                                    <input type="text" class="input input-bordered input-primary w-full"
+                                           placeholder="jika ada" name="essence${i}" id="essence${i}" value="">
+                                </div>
+                            </div>
+                            <!-- variant end -->
+                            <!-- qty and total start -->
+                            <div class="flex justify-between">
+                                <div class="form-control mb-3" style="width: 48%;">
+                                    <label class="label mx-3">
+                                        <span class="label-text">Kuantitas</span>
+                                        <span class="label-text-alt text-error">*</span>
+                                    </label>
+                                    <input type="number" class="input input-bordered input-primary w-full"
+                                           placeholder="e.g. 5" name="qty${i}" id="qty${i}" value="">
+                                </div>
+                                <div class="form-control mb-3" style="width: 48%;">
+                                    <label class="label mx-3">
+                                        <span class="label-text">Total Harga</span>
+                                    </label>
+                                    <input type="number" class="input input-bordered input-primary w-full"
+                                           placeholder="" name="total${i}" id="total${i}" value="" readonly>
+                                </div>
+                            </div>
+                            <!-- qty and total end -->
+                        </div>
+                    </details>
+                    `;
+                collapseContainer.append(collapseHtml);
+                var selectCategory = $(`.collapse-product-${i} .select-category`);
+
+                selectCategory.select2({
+                    placeholder: "Silahkan ketik produk lalu pilih",
+                    dropdownParent: $("#data_modal"),
+                    minimumInputLength: 4,
+                    ajax: {
+                        url: rootUrl + "api/product",
+                        method: "GET",
+                        dataType: "json",
+                        headers: {
+                            Authorization: "Bearer " + TOKEN,
+                        },
+                        processResults: function (data) {
+                            // Map the fetched data to Select2 format
+                            return {
+                                results: data.map(function (product) {
+                                    var text =
+                                        product.name_product +
+                                        " " +
+                                        product.netto_product +
+                                        product.unit +
+                                        " - Rp." +
+                                        product.harga_product;
+                                    return {
+                                        id: product.id_product,
+                                        text: text,
+                                    };
+                                }),
+                            };
+                        },
+                        cache: true,
+                    },
+                });
+
+                $('.collapse-content').on('input', `#variant${i}, #essence${i}, #qty${i}`, function () {
+                    const index = i; // Use the current loop index
+
+                    var selectedData = $(`.collapse-product-${index} .select-category`).select2("data")[0];
+                    var productSplit = selectedData.text.split(" - ");
+                    var productName = productSplit[0];
+                    var variant = $(`#variant${index}`).val();
+                    var essence = $(`#essence${index}`).val();
+                    var qty = $(`#qty${index}`).val();
+                    var harga_product = parseFloat(productSplit[1].replace("Rp.", ""));
+                    var total = parseFloat(qty) * harga_product;
+
+                    productData[index - 1] = {
+                        id: selectedData.id,
+                        name_product: productName,
+                        variant: variant,
+                        essence: essence,
+                        qty: qty,
+                        harga_product: harga_product,
+                        total: total
+                    };
+                });
+                calculateTotal(i);
+            }
+        }
     });
 
-    // Function to calculate total harga based selected product and qty
-    $("#qty").on("input", function () {
-        var qtyInput = $("#qty").val();
-        var selectedData = $(".select-category").select2("data")[0];
-        var product = selectedData ? selectedData.text : "";
-        var productSplit = product.split(" - ");
-        var harga_product = productSplit[1].replace("Rp.", "");
-        var total = parseFloat(qtyInput) * parseFloat(harga_product);
-        $("#total").val(total.toFixed(2));
-    });
+    function combineProductNames() {
+        return productData.map(product => {
+            var name = product.name_product;
+            if (product.variant) {
+                name += ` - ${product.variant}`;
+            }
+            if (product.essence) {
+                name += `, ${product.essence}`;
+            }
+            return name;
+        }).join(" ; ");
+    }
+
+    // Function to calculate total
+    function calculateTotal(i) {
+        // Calculate total harga based on selected product and qty
+        $(`#qty${i}`).on("input", function () {
+            var qtyInput = $(this).val();
+            var selectedData = $(`.collapse-product-${i} .select-category`).select2("data")[0];
+            var product = selectedData ? selectedData.text : "";
+            var productSplit = product.split(" - ");
+            var harga_product = productSplit[1].replace("Rp.", "");
+            var total = parseFloat(qtyInput) * parseFloat(harga_product);
+            $(`#total${i}`).val(total.toFixed(2));
+        });
+    }
 
     // Function to hide alert and loading bar
     function hideAlert(alert, loading) {
@@ -250,6 +360,7 @@ $(document).ready(function () {
         $("#id").val(data.id);
         $("#tanggal").val(data.tanggal_pembelian);
         $("#customer").val(data.customer);
+        $("#kode").val(data.kode);
         $("#alamat").val(data.alamat);
         $("#telp").val(data.telp);
         $("#qty").val(data.qty_pembelian);
@@ -261,32 +372,33 @@ $(document).ready(function () {
         $("#id").val("");
         $("#tanggal").val("");
         $("#customer").val("");
+        $("#kode").val("");
         $("#alamat").val("");
         $("#telp").val("");
-        //$(".select-category").val("");
-        $(".select-category").val([]).trigger("change");
-        $("#variant").val("");
-        $("#essence").val("");
-        $("#qty").val("");
-        $("#total").val("");
+        $(".range").val("0");
     }
 
     function saveChanges(id) {
         var tanggal = $("#tanggal").val();
         var customer = $("#customer").val();
+        var kode = $("#kode").val();
         var alamat = $("#alamat").val();
         var telp = $("#telp").val();
-        var variant = $("#variant").val();
-        var essence = $("#essence").val();
-        var qty_pembelian = $("#qty").val();
+        var sumTotal = 0;
+        var qtyValues = [];
+        var hargaValues = [];
 
-        // parse product here
-        var selectedData = $(".select-category").select2("data")[0];
-        var product = selectedData ? selectedData.text : "";
-        var productSplit = product.split(" - ");
-        var nama_barang = productSplit[0] + " - " + variant + "," + essence;
-        var harga_product = productSplit[1].replace("Rp.", "");
-        var total = qty_pembelian * harga_product;
+        for (let j = 1; j <= selectedValue; j++) {
+            if (productData[j - 1]) {
+                qtyValues.push(productData[j - 1].qty);
+                hargaValues.push(productData[j - 1].harga_product);
+                sumTotal += parseFloat(productData[j - 1].total);
+            }
+        }
+
+        var productString = combineProductNames();
+        var qtyString = qtyValues.join(" ; ");
+        var hargaString = hargaValues.join(" ; ");
 
         if (!id) {
             // tambah data
@@ -314,12 +426,13 @@ $(document).ready(function () {
                 id: id,
                 tanggal_pembelian: tanggal,
                 customer: customer,
+                kode: kode,
                 alamat: alamat,
                 telp: telp,
-                nama_barang: nama_barang,
-                qty_pembelian: qty_pembelian,
-                harga: harga_product,
-                total_harga: total,
+                nama_barang: productString,
+                qty_pembelian: qtyString,
+                harga: hargaString,
+                total_harga: sumTotal,
             },
             success: function (response) {
                 console.log(response);

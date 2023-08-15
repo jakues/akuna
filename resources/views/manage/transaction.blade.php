@@ -76,8 +76,9 @@
                             id="alamat"></textarea>
                     </div>
                     {{-- alamat end --}}
+                    <div class="flex justify-between">
                     {{-- telp start --}}
-                    <div class="form-control w-full mb-3">
+                    <div class="form-control w-4/12 mb-3">
                         <label class="label mx-3">
                             <span class="label-text">Telepon</span>
                             <span class="label-text-alt text-error">*</span>
@@ -87,53 +88,32 @@
                                value="">
                     </div>
                     {{-- telp end --}}
-                    {{-- product start --}}
-                    <div class="form-control w-full mb-3">
+                    {{-- count product start --}}
+                    <div class="form-control w-3/5 mb-3">
                         <label class="label mx-3">
-                            <span class="label-text">Pilih Produk</span>
+                            <span class="label-text">Masukkan jumlah produk</span>
                             <span class="label-text-alt text-error">*</span>
                         </label>
-                        <select name="category" class="select-category select select-bordered select-primary">
-                        </select>
-                    </div>
-                    {{-- product end --}}
-                    {{-- variant start --}}
-                    <div class="flex justify-between">
-                        <div class="form-control mb-3" style="width: 48%;">
-                            <label class="label mx-3">
-                                <span class="label-text">Variant</span>
-                            </label>
-                            <input type="text" class="input input-bordered input-primary w-full"
-                                   placeholder="jika ada" name="variant" id="variant" value="">
-                        </div>
-                        <div class="form-control mb-3" style="width: 48%;">
-                            <label class="label mx-3">
-                                <span class="label-text">Essence</span>
-                            </label>
-                            <input type="text" class="input input-bordered input-primary w-full"
-                                   placeholder="jika ada" name="essence" id="essence" value="">
+                        <input type="range" min="0" max="10" class="range range-secondary" step="1"/>
+                        <div class="w-full flex justify-between text-xs px-2">
+                            <span></span>
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
                         </div>
                     </div>
-                    {{-- variant end --}}
-                    {{-- qty and total start --}}
-                    <div class="flex justify-between">
-                        <div class="form-control mb-3" style="width: 48%;">
-                            <label class="label mx-3">
-                                <span class="label-text">Kuantitas</span>
-                                <span class="label-text-alt text-error">*</span>
-                            </label>
-                            <input type="number" class="input input-bordered input-primary w-full"
-                                   placeholder="jika ada" name="qty" id="qty" value="">
-                        </div>
-                        <div class="form-control mb-3" style="width: 48%;">
-                            <label class="label mx-3">
-                                <span class="label-text">Total Harga</span>
-                            </label>
-                            <input type="number" class="input input-bordered input-primary w-full"
-                                   placeholder="" name="total" id="total" value="" readonly>
-                        </div>
+                    {{-- end count product --}}
                     </div>
-                    {{-- qty and total end --}}
+                    {{-- collapse product start --}}
+                    <div id="collapseContainer" class="mt-5"></div>
+                    {{-- end collapse product --}}
                     <div class="flex justify-end mt-5">
                         <button type="submit" class="btn btn-accent btn-submit"
                                 name="product-submit">Save
@@ -162,7 +142,8 @@
                             <span class="label-text-alt">Format must <span class="text-error">.xlsx</span></span>
                         </label>
                         <input type="file"
-                               class="file-input file-input-accent file-input-bordered file-input-md w-full" id="XlsxFile" name="XlsxFile"/>
+                               class="file-input file-input-accent file-input-bordered file-input-md w-full"
+                               id="XlsxFile" name="XlsxFile"/>
                     </div>
                     <div class="flex justify-end mt-5">
                         <button type="submit" class="btn btn-accent import-submit">Submit</button>

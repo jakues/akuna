@@ -85,8 +85,8 @@ class TransactionController extends Controller
             'alamat' => 'required|string|max:255',
             'telp' => 'required|string|max:15',
             'nama_barang' => 'required|string',
-            'qty_pembelian' => 'required|numeric|max:10000',
-            'harga' => 'required|numeric|max:9999999',
+            'qty_pembelian' => 'required|string|max:50',
+            'harga' => 'required|string',
             'total_harga' => 'required|numeric|max:999999999',
         ]);
 
@@ -141,9 +141,9 @@ class TransactionController extends Controller
             'kode' => 'required|string|max:50',
             'alamat' => 'required|string|max:255',
             'telp' => 'required|string|max:15',
-            'nama_barang' => 'required|string|max:255',
-            'qty_pembelian' => 'required|numeric|max:10000',
-            'harga' => 'required|numeric|max:9999999',
+            'nama_barang' => 'required|string',
+            'qty_pembelian' => 'required|string|max:50',
+            'harga' => 'required|string',
             'total_harga' => 'required|numeric|max:999999999',
         ]);
 
