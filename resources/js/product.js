@@ -80,7 +80,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/manage/products/import',
+            url: rootUrl + 'manage/products/import',
             data: formData,
             contentType: false,
             processData: false,

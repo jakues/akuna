@@ -89,23 +89,6 @@ class DashboardController extends Controller
         }
     }
 
-    // Function to calculate load avg
-    private function getSystemLoad()
-    {
-        // Get the number of CPU cores
-        $numCores = (int) shell_exec('nproc');
-
-        // Get the system load averages
-        $loadAverage = sys_getloadavg();
-
-        // Calculate load averages in percentage
-         return [
-            'load_average_1min' => ($loadAverage[0] / $numCores) * 100,
-            'load_average_5min' => ($loadAverage[1] / $numCores) * 100,
-            'load_average_15min' => ($loadAverage[2] / $numCores) * 100,
-        ];
-    }
-
     // Function to fetch db health
     private function getDbHealth()
     {
@@ -129,16 +112,12 @@ class DashboardController extends Controller
         $totalTx = DB::table('pembelian')->count();
         $totalProduct = DB::table('product')->count();
         $totalMember = DB::table('users')->count();
-        $loadAvg = $this->getSystemLoad();
         $dbHealth = $this->getDbHealth();
 
         $dashboardData = [
             'total_products' => $totalProduct,
             'total_transaction' => $totalTx,
             'total_member' => $totalMember - 1,
-            'load_avg_1min' => $loadAvg['load_average_1min'],
-            'load_avg_5min' => $loadAvg['load_average_5min'],
-            'load_avg_15min' => $loadAvg['load_average_15min'],
             'db_health_status' => $dbHealth['status'],
             'db_health_message' => $dbHealth['message'],
         ];

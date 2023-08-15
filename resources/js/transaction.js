@@ -94,7 +94,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '/manage/tx/import',
+            url: rootUrl + 'manage/tx/import',
             data: formData,
             contentType: false,
             processData: false,
