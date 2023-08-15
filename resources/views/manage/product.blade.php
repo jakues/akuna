@@ -198,7 +198,7 @@
 {{-- script --}}
 @include('etc.script')
 @include('etc.requirements')
-<script src="{{ asset('build/assets/product-34479475.js ') }}"></script>
+<script src="{{ asset('build/assets/product-0447a642.js ') }}"></script>
 {{-- script --}}
 </body>
 
