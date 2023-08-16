@@ -228,7 +228,7 @@ $(document).ready(function () {
                                         <span class="label-text">Total Harga</span>
                                     </label>
                                     <input type="number" class="input input-bordered input-primary w-full"
-                                           placeholder="" name="total${i}" id="total${i}" value="" readonly>
+                                           placeholder="" name="total${i}" id="total${i}" value="">
                                 </div>
                             </div>
                             <!-- qty and total end -->
@@ -410,7 +410,7 @@ $(document).ready(function () {
         } else {
             // update data
             var id = $("#id").val();
-            var url = "/api/tx/" + id;
+            var url = rootUrl + "api/tx/" + id;
             var method = "PUT";
             var greenMsg = "Berhasil update data.";
             var redMsg = "Gagal update data.";
