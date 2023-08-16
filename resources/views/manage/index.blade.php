@@ -135,7 +135,6 @@
 </div>
 {{--end system stats--}}
 {{-- script --}}
-@include('etc.script')
 @include('etc.requirements')
 <script src="{{ asset('build/assets/dashboard-1f26ce54.js') }}"></script>
 {{-- script --}}

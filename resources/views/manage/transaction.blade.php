@@ -185,9 +185,8 @@
 {{-- table end --}}
 
 {{-- script --}}
-@include('etc.script')
 @include('etc.requirements')
-<script src="{{ asset('build/assets/transaction-0533d911.js') }}"></script>
+<script src="{{ asset('build/assets/transaction-aa412240.js') }}"></script>
 {{-- script --}}
 </body>
 
