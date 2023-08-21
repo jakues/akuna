@@ -5,7 +5,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/css/dataTables.tailwindcss.min.css', 'resources/css/select2.min.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/datatables.min.css', 'resources/css/responsive.dataTables.min.css', 'resources/css/select2.min.css', 'resources/js/app.js'])
     <title>manage - transaction</title>
 </head>
 
@@ -157,13 +157,26 @@
         </form>
     </dialog>
     {{-- end modal import --}}
+    {{-- modal info start --}}
+    <dialog id="info_modal" class="modal">
+        <form method="dialog" class="modal-box max-w-3xl">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <h3 class="text-xl mb-5">Details for <span class="heading font-bold"></span></h3>
+            <div class="content mx-5">
+            </div>
+        </form>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    {{-- end modal info --}}
     <a href="{{ route('admin.transaction.export') }}" class="btn btn-neutral text-slate-50 mx-5"><i
             class="fa-solid fa-file-export"></i>Export</a>
 </div>
 
 {{-- table start --}}
 <section class="m-10 min-h-screen">
-    <table id="data-table" class="display" style="width:100%" data-theme="pastel">
+    <table id="data-table" class="display responsive" style="width:100%" data-theme="pastel">
         <thead>
         <tr>
             <th>#</th>

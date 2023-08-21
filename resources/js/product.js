@@ -2,14 +2,13 @@ const TOKEN = import.meta.env.VITE_TOKEN;
 const rootUrl = "/";
 
 new DataTable("#product-table", {
-    responsive: true,
     language: {
         lengthMenu: "Showing _MENU_ per pages",
         search: "_INPUT_",
         searchPlaceholder: " Cari Data",
     },
     processing: true,
-    serverside: true,
+    responsive: true,
     ajax: {
         url: rootUrl + "api/products",
         type: "GET",
@@ -50,6 +49,8 @@ new DataTable("#product-table", {
         {
             data: "actions",
             name: "Actions",
+            orderable: false,
+            searchable: false
         },
     ],
 });
