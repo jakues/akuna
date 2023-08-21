@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/js/tailwind.js',
                 'resources/js/dashboard.js',
                 'resources/js/product.js',
                 'resources/js/transaction.js'

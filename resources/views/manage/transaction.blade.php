@@ -5,8 +5,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-22a9a34e.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-fa74f9f9.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-9726d929.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-a66ac931.css') }}">
     <title>manage - transaction</title>
 </head>
 
@@ -158,6 +158,19 @@
         </form>
     </dialog>
     {{-- end modal import --}}
+    {{-- modal info start --}}
+    <dialog id="info_modal" class="modal">
+        <form method="dialog" class="modal-box max-w-3xl">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <h3 class="text-xl mb-5">Details for <span class="heading font-bold"></span></h3>
+            <div class="content mx-5">
+            </div>
+        </form>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    {{-- end modal info --}}
     <a href="{{ route('admin.transaction.export') }}" class="btn btn-neutral text-slate-50 mx-5"><i
             class="fa-solid fa-file-export"></i>Export</a>
 </div>
@@ -186,7 +199,8 @@
 
 {{-- script --}}
 @include('etc.requirements')
-<script src="{{ asset('build/assets/transaction-aa412240.js') }}"></script>
+<script src="{{ asset('dist/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('build/assets/transaction-74be057a.js') }}"></script>
 {{-- script --}}
 </body>
 

@@ -5,8 +5,8 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-22a9a34e.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-fa74f9f9.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-9726d929.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/tailwind-b2d4f860.css') }}">
     <title>akuna - manage</title>
 </head>
 
@@ -198,7 +198,9 @@
 {{-- script --}}
 @include('etc.script')
 @include('etc.requirements')
-<script src="{{ asset('build/assets/product-0447a642.js ') }}"></script>
+<script src="{{ asset('dist/js/datatables.min.js') }}"></script>
+<script src="{{ asset('dist/js/dataTables.tailwindcss.min.js') }}"></script>
+<script src="{{ asset('build/assets/product-a17c5985.js') }}"></script>
 {{-- script --}}
 </body>
 

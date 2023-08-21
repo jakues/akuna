@@ -4,8 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-22a9a34e.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/app-fa74f9f9.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/app-c4a42d02.css') }}">
     <title>manage - dashboard</title>
 </head>
 
