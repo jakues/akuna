@@ -1,15 +1,14 @@
 const TOKEN = import.meta.env.VITE_TOKEN;
 const rootUrl = "/akuna/public/";
 
-new DataTable("#data-table", {
-    responsive: true,
+let dataTable = new DataTable("#data-table", {
     language: {
         lengthMenu: "Showing _MENU_ per pages",
         search: "_INPUT_",
         searchPlaceholder: " Cari Data",
     },
     processing: true,
-    serverSide: true,
+    responsive: true,
     ajax: {
         url: rootUrl + "api/tx",
         type: "GET",
@@ -42,29 +41,113 @@ new DataTable("#data-table", {
         {
             data: "telp",
             name: "Telepon",
+            orderable: false
         },
         {
             data: "nama_barang",
             name: "Produk",
+            render: function (data, type) {
+                if (type === "display") {
+                    var items = data.split(";"); // Split data using semicolon
+                    var displayedItems = items.slice(0, 1).join(" ; ");
+                    var remainingItemCount = items.length - 1;
+
+                    if (remainingItemCount > 0) {
+                        var linkText = remainingItemCount === 1 ? "1 more ..." : remainingItemCount - 1 + " more ...";
+                        displayedItems += ' ; <a href="javascript:void(0)" class="link link-info">' + linkText + '</a>';
+                    }
+
+                    if (items.length > 2) {
+                        return displayedItems;
+                    }
+
+                    if (data.length > 100) {
+                        return displayedItems;
+                    } else {
+                        return data;
+                    }
+                }
+                return data;
+            }
         },
         {
             data: "qty_pembelian",
             name: "Qty",
+            orderable: false,
+            render: function (data, type) {
+                if (type === "display") {
+                    var items = data.split(";");
+                    var displayedItems = items.slice(0, 1).join(" ; ");
+                    var remainingItemCount = items.length - 1;
+
+                    if (remainingItemCount > 0) {
+                        var linkText = remainingItemCount === 1 ? "1 more ..." : remainingItemCount + " more ...";
+                        displayedItems += ' ; <a href="javascript:void(0)" class="link link-info">' + linkText + '</a>';
+                    }
+
+                    if (items.length > 2) {
+                        return displayedItems;
+                    }
+
+                    if (data.length > 50) {
+                        return displayedItems;
+                    } else {
+                        return data;
+                    }
+                }
+                return data;
+            }
         },
         {
             data: "harga",
             name: "Harga",
+            orderable: false,
+            render: function (data, type) {
+                if (type === "display") {
+                    var items = data.split(";");
+                    var displayedItems = items.slice(0, 1).join(" ; ");
+                    var remainingItemCount = items.length - 1;
+
+                    if (remainingItemCount > 0) {
+                        var linkText = remainingItemCount === 1 ? "1 more ..." : remainingItemCount + " more ...";
+                        displayedItems += ' ; <a href="javascript:void(0)" class="link link-info">' + linkText + '</a>';
+                    }
+
+                    if (items.length > 2) {
+                        return displayedItems;
+                    }
+
+                    if (data.length > 50) {
+                        return displayedItems;
+                    } else {
+                        return data;
+                    }
+                }
+                return data;
+            }
         },
         {
             data: "total_harga",
             name: "Total",
+            render: function (data, type) {
+                if (type === 'display' || type === 'filter') {
+                    return formatPrice(data);
+                }
+                return data;
+            }
         },
         {
             data: "actions",
             name: "Actions",
+            orderable: false,
+            searchable: false
         },
     ],
 });
+
+function formatPrice(price) {
+    return price.toLocaleString();
+}
 
 $(document).ready(function () {
     const loadingBarGreen = $(".loadingBarGreen");
@@ -77,6 +160,37 @@ $(document).ready(function () {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
+
+    // info modal
+    $('#data-table').on('click', '.link-info', function (e) {
+        e.preventDefault();
+        var rowData = dataTable.row($(this).closest("tr")).data();
+        var customer = rowData.customer;
+        var namaBarang = rowData.nama_barang;
+        var qtyPembelian = rowData.qty_pembelian;
+        var harga = rowData.harga;
+
+        // Split data to create table rows
+        var items = namaBarang.split(" ; ").map(item => item.trim());
+        var qtyList = qtyPembelian.split(" ; ").map(qty => qty.trim());
+        var hargaList = harga.split(" ; ").map(price => price.trim());
+
+        $('.heading').text(customer);
+        var table = buildModalTable(items, qtyList, hargaList);;
+        $('.content').html(table);
+
+        info_modal.showModal();
+    });
+
+    function buildModalTable(items, qtyList, hargaList) {
+        var tableContent = items.map((item, index) => {
+            var qty = qtyList[index];
+            var price = hargaList[index];
+            return '<tr><td>' + item + '</td><td>' + qty + '</td><td>' + price + '</td></tr>';
+        }).join('');
+
+        return '<table class="table table-zebra"><thead><tr><th>Nama Produk</th><th>Kuantitas</th><th>Harga</th></tr></thead><tbody>' + tableContent + '</tbody></table>';
+    }
 
     // Show modal and reset value on import modal
     $('#import-btn').click(function (e) {
