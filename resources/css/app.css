@@ -21,3 +21,7 @@
 .loading-animation {
     animation: loading 4s linear;
 }
+
+table.dataTable tbody tr:hover:hover {
+    background-color: #ffffdd;
+}
